@@ -97,19 +97,32 @@ namespace Conflight
                 return GetValue(t, n as TextNode);
             }
 
-            if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(List<>))
+            if (t.IsGenericType)
             {
-                var itemType = t.GetGenericArguments()[0];
+                var genericType = t.GetGenericTypeDefinition();
 
-                return GetList(itemType, n as ListNode);
-            }
+                if (genericType == typeof(Dictionary<,>))
+                {
+                    var keyType = t.GetGenericArguments()[0];
+                    var valueType = t.GetGenericArguments()[1];
 
-            if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Dictionary<,>))
-            {
-                var keyType = t.GetGenericArguments()[0];
-                var valueType = t.GetGenericArguments()[1];
+                    return GetDictionary(keyType, valueType, n as DictNode);
+                }
 
-                return GetDictionary(keyType, valueType, n as DictNode);
+                if (genericType == typeof(List<>))
+                {
+                    var itemType = t.GetGenericArguments()[0];
+
+                    return GetList(itemType, n as ListNode);
+                }
+
+                // Nullables will never actually be null--leaving them out is letting them be null.
+                if (genericType == typeof(Nullable<>))
+                {
+                    var itemType = t.GetGenericArguments()[0];
+
+                    return GetValue(itemType, n as TextNode);
+                }
             }
 
             if (t.BaseType == typeof(Array))
