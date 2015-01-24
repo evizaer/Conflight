@@ -10,7 +10,7 @@ namespace Conflight
 
     public class Lexer
     {
-        private Dictionary<char, TokenType> CharTokenTypes = new Dictionary<char, TokenType> {
+        private static Dictionary<char, TokenType> CharTokenTypes = new Dictionary<char, TokenType> {
             {'[', TokenType.ListStart},
             {']', TokenType.ListEnd},
             {'{', TokenType.DictStart},
@@ -20,7 +20,7 @@ namespace Conflight
             {'\n', TokenType.ListDelimiter}
         };
 
-        public List<Token> Lex(string input)
+        public static List<Token> Lex(string input)
         {
             var result = new List<Token>();
 
@@ -82,7 +82,7 @@ namespace Conflight
             return result;
         }
 
-        private Token ReadQuotedText(string input, ref int i)
+        private static Token ReadQuotedText(string input, ref int i)
         {
             Match m = Regex.Match(input.Substring(i), "\"[^\"]+\"");
 
@@ -97,7 +97,7 @@ namespace Conflight
             }
         }
 
-        private Token ReadText(string input, ref int i)
+        private static Token ReadText(string input, ref int i)
         {
             Match m = Regex.Match(input.Substring(i), @"^-?(\w|\.| )+");
 

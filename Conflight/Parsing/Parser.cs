@@ -7,7 +7,7 @@ namespace Conflight
 {
     public class Parser
     {
-        public ParseNode Parse(List<Token> tokens)
+        public static ParseNode Parse(List<Token> tokens)
         {
             int i = 0;
             return Process(tokens, ref i);

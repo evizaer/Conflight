@@ -3,14 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Reflection;
+using System.IO;
 
 namespace Conflight
 {
     public class ObjectLoader
     {
+        private static ParseNode ParseFile(string filename)
+        {
+            return Parse(File.ReadAllText(filename));
+        }
+
+        private static ParseNode Parse(string input)
+        {
+            return Parser.Parse(Lexer.Lex(input));
+        }
+
         public static void LoadStatic<T>(string content)
         {
-            var root = Config.Parse(content) as DictNode;
+            var root = Parse(content) as DictNode;
 
             if (root != null)
             {
@@ -52,12 +63,12 @@ namespace Conflight
 
         public static T LoadInstance<T>(string content) where T : new()
         {
-            return LoadInstance<T>(Config.Parse(content) as DictNode);
+            return LoadInstance<T>(Parse(content) as DictNode);
         }
 
         public static List<T> LoadInstanceList<T>(string content) where T : new()
         {
-            var listNode = Config.Parse(content) as ListNode;
+            var listNode = Parse(content) as ListNode;
 
             if (listNode == null)
             {
