@@ -34,7 +34,9 @@ namespace Conflight
             //string test3 = "[a, b, {test: [1, 2], test2: \"other 123, super!\"}, [1, 2]]";
             //string test4 = "{D: [1, 10, -3, 1], A: 10, E: {A: dog, D: {test: 2, test3: 3}, meta: 10}, B: \"very test\"}";
             //string test5 = "[{E0L: {V1: 10, V3: -1}, A: 10, B: base dog, E: {F: true}}, {A: 1, C: 10.231}, {F: V3, D: [1, 0, 0, 1]}]";
-            string test = "[{\n\tA: 10\n\tB: dog\n}\n{\n\tA: 5\n\tF: V3, C: 1.1}]";
+            //string test6 = "[{\n\tA: 10\n\tB: dog\n}\n{\n\tA: 5\n\tF: V3, C: 1.1}]";
+            //string test = "A: 10\nB: dog\nD: [1, 2, 9]\nE: {D: {Test1: 10, TestTwo: 5}}";
+            string test = "{A: 10\nB: dog\nD: [1, 2, 9]\nE: {D: {Test1: 10, TestTwo: 5}}}\n{E: {F: false}\nF:V3}";
 
 
             /*

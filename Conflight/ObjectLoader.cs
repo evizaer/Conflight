@@ -63,11 +63,21 @@ namespace Conflight
 
         public static T LoadInstance<T>(string content) where T : new()
         {
+            if (!content.Trim().StartsWith("{"))
+            {
+                content = "{ " + content + " }";
+            }
+
             return LoadInstance<T>(Parse(content) as DictNode);
         }
 
         public static List<T> LoadInstanceList<T>(string content) where T : new()
         {
+            if (!content.Trim().StartsWith("["))
+            {
+                content = "[ " + content + " ]";
+            }
+
             var listNode = Parse(content) as ListNode;
 
             if (listNode == null)
