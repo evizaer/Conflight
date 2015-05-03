@@ -33,7 +33,14 @@ namespace Conflight
                 return null;
             }
 
-            return processors[tokens[i].Type](tokens, ref i);
+            if (processors.ContainsKey(tokens[i].Type))
+            {
+                return processors[tokens[i].Type](tokens, ref i);
+            }
+            else
+            {
+                throw new Exception("Token '" + tokens[i].Contents + "' unexpected.");
+            }
         }
 
         public static ParseNode ProcessText(List<Token> tokens, ref int i)
@@ -58,14 +65,12 @@ namespace Conflight
             {
                 ParseNode candidate = Process(tokens, ref i);
 
-                if (candidate != null)
-                {
-                    result.Children.Add(candidate);
-                }
-                else
+                if (candidate == null)
                 {
                     throw new Exception("Found an unexpected token in a list while processing! " + tokens[i].Contents);
                 }
+
+                result.Children.Add(candidate);
 
                 while (tokens[i].Type == TokenType.ListDelimiter) ++i;
             }
@@ -75,7 +80,6 @@ namespace Conflight
                 result.Value.Add(p);
             }
 
-            // Advance one past the end of the list.
             ++i;
 
             return result;
@@ -109,37 +113,27 @@ namespace Conflight
 
         private static MappingNode ProcessMapping(List<Token> tokens, ref int i)
         {
-            MappingNode result = null;
+            var keyNode = Process(tokens, ref i) as TextNode;
 
-            ParseNode keyNode = Process(tokens, ref i);
-
-            if (keyNode != null && keyNode is TextNode)
-            {
-                if (tokens[i].Type == TokenType.MappingDelimiter)
-                {
-                    ++i;
-                    ParseNode valueNode = Process(tokens, ref i);
-
-                    if (valueNode != null)
-                    {
-                        result = new MappingNode { Key = keyNode as TextNode, Value = valueNode };
-                    }
-                    else
-                    {
-                        throw new Exception("Could not parse value node!");
-                    }
-                }
-                else
-                {
-                    throw new Exception("Mapping delimiter must follow key node.");
-                }
-            }
-            else
+            if (keyNode == null)
             {
                 throw new Exception("Found an unexpected token in a dict key! " + tokens[i].Contents);
             }
 
-            return result;
+            if (tokens[i].Type != TokenType.MappingDelimiter)
+            {
+                throw new Exception("Mapping delimiter must follow key node.");
+            }
+
+            ++i;
+            var valueNode = Process(tokens, ref i);
+
+            if (valueNode == null)
+            {
+                throw new Exception("Could not parse value node for key " + keyNode.Value + "!");
+            }
+
+            return new MappingNode { Key = keyNode as TextNode, Value = valueNode };
         }
     }
 }
