@@ -27,7 +27,7 @@ namespace Conflight
             {
                 var fieldLookup = typeof(T).GetFields().Where(f => f.IsStatic).ToDictionary(f => f.Name.ToUpper());
 
-                foreach (var kv in root.Value)
+                foreach (var kv in root.Mappings)
                 {
                     var key = kv.Key.ToUpper();
 
@@ -101,7 +101,7 @@ namespace Conflight
 
             var props = t.GetProperties().ToDictionary(p => p.Name);
 
-            var dict = node.Value;
+            var dict = node.Mappings;
 
             foreach (var p in props.Where(p => dict.ContainsKey(p.Key)))
             {
@@ -181,7 +181,7 @@ namespace Conflight
             var dictType = typeof(Dictionary<,>).MakeGenericType(new[] {keyType, valueType});
             var result = Activator.CreateInstance(dictType);
 
-            foreach (var pair in dictNode.Value)
+            foreach (var pair in dictNode.Mappings)
             {
                 object key;
                 if (keyType.IsEnum)

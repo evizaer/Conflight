@@ -7,13 +7,13 @@ namespace Conflight
 {
     public class DictNode : ParseNode
     {
-        public Dictionary<string, ParseNode> Value = new Dictionary<string,ParseNode>();
+        public Dictionary<string, ParseNode> Mappings = new Dictionary<string,ParseNode>();
 
         public double GetDoubleValue(string key)
         {
-            if (Value[key] is TextNode)
+            if (Mappings[key] is TextNode)
             {
-                return Convert.ToDouble((Value[key] as TextNode).Value);
+                return Convert.ToDouble((Mappings[key] as TextNode).Value);
             }
             else
             {
@@ -23,9 +23,9 @@ namespace Conflight
 
         public string GetStringValue(string key)
         {
-            if (Value[key] is TextNode)
+            if (Mappings[key] is TextNode)
             {
-                return (Value[key] as TextNode).Value;
+                return (Mappings[key] as TextNode).Value;
             }
             else
             {
@@ -35,9 +35,9 @@ namespace Conflight
 
         public int GetIntValue(string key)
         {
-            if (Value[key] is TextNode)
+            if (Mappings[key] is TextNode)
             {
-                return Convert.ToInt32((Value[key] as TextNode).Value);
+                return Convert.ToInt32((Mappings[key] as TextNode).Value);
             }
             else
             {
@@ -49,9 +49,9 @@ namespace Conflight
         {
             List<string> result = new List<string>();
 
-            if (Value[key] is ListNode)
+            if (Mappings[key] is ListNode)
             {
-                foreach (ParseNode p in (Value[key] as ListNode).Value)
+                foreach (ParseNode p in (Mappings[key] as ListNode).Value)
                 {
                     if (p is TextNode)
                     {

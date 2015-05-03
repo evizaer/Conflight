@@ -13,6 +13,11 @@ namespace Conflight
             return Process(tokens, ref i);
         }
 
+        /// <summary>
+        /// Parses a list of tokens into a ParseNode, keeping track of the current position in that list by updating and passing along i.
+        /// i should be the NEXT unprocessed token after finishing what parsing can be done in this processor.
+        /// </summary>
+        /// <returns>A Node containing the parsed content of tokens.</returns>
         delegate ParseNode TokenProcessor(List<Token> tokens, ref int i);
 
         static Dictionary<TokenType, TokenProcessor> processors = new Dictionary<TokenType, TokenProcessor> {
@@ -28,25 +33,17 @@ namespace Conflight
                 return null;
             }
 
-            ParseNode result = null;
-
-            Token cur = tokens[i];
-
-            result = processors[cur.Type](tokens, ref i);
-
-            return result;
+            return processors[tokens[i].Type](tokens, ref i);
         }
 
         public static ParseNode ProcessText(List<Token> tokens, ref int i)
         {
-            if (tokens[i].Type == TokenType.Text)
-            {
-                return new TextNode { LiteralContents = tokens[i].Contents, Value = tokens[i++].Contents };
-            }
-            else
+            if (tokens[i].Type != TokenType.Text)
             {
                 throw new Exception("Expected text node but got " + tokens[i].Contents);
             }
+
+            return new TextNode { LiteralContents = tokens[i].Contents, Value = tokens[i++].Contents };
         }
 
         public static ParseNode ProcessList(List<Token> tokens, ref int i)
@@ -103,7 +100,7 @@ namespace Conflight
 
             foreach (MappingNode node in mappings)
             {
-                result.Value.Add(node.Key.LiteralContents, node.Value);
+                result.Mappings.Add(node.Key.LiteralContents, node.Value);
             }
 
             ++i;
