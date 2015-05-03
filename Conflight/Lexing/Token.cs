@@ -10,6 +10,8 @@ namespace Conflight
         public TokenType Type { get; set; }
         public string Contents;
 
+        public int LineNumber, ColumnNumber;
+
         public Token Next, Previous;
 
         public override string ToString()

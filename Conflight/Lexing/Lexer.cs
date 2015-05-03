@@ -24,13 +24,17 @@ namespace Conflight
         {
             var result = new List<Token>();
 
-            int i = 0;
+            int lineNumber = 1;
+            int lineStartCharIndex = 0;
+            int charIndex = 0;
 
-            while (i < input.Length)
+            while (charIndex < input.Length)
             {
-                char c = input[i];
+                char c = input[charIndex];
 
-                var t = new Token();
+
+
+                var t = new Token() { LineNumber = lineNumber, ColumnNumber = charIndex - lineStartCharIndex };
 
                 bool shouldAddToken = true;
                 if (CharTokenTypes.ContainsKey(c))
@@ -38,27 +42,34 @@ namespace Conflight
                     t.Type = CharTokenTypes[c];
                     t.Contents = c.ToString();
 
-                    ++i;
+                    ++charIndex;
                 }
                 else if (Regex.IsMatch(c.ToString(), @"\s"))
                 {
-                    ++i;
+                    ++charIndex;
                     shouldAddToken = false;
                 }
                 else if (Regex.IsMatch(c.ToString(), @"-|\w|\.")) 
                 {
-                    t = ReadText(input, ref i);
+                    ReadText(input, ref charIndex, ref t);
                 }
                 else if (c == '"')
                 {
-                    t = ReadQuotedText(input, ref i);
+                    ReadQuotedText(input, ref charIndex, ref t);
                 }
                 else
                 {
-                    ++i;
+                    ++charIndex;
                     shouldAddToken = false;
                     Console.WriteLine("Couldn't handle character " + c);
                 }
+
+                if (c == '\n')
+                {
+                    ++lineNumber;
+                    lineStartCharIndex = charIndex;
+                }
+
 
                 if (shouldAddToken)
                 {
@@ -82,14 +93,15 @@ namespace Conflight
             return result;
         }
 
-        private static Token ReadQuotedText(string input, ref int i)
+        private static void ReadQuotedText(string input, ref int i, ref Token t)
         {
             Match m = Regex.Match(input.Substring(i), "\"[^\"]+\"");
 
             if (m.Success && m.Index == 0)
             {
                 i += m.Length;
-                return new Token { Contents = m.Value.Substring(1, m.Value.Length - 2) };
+                t.Type = TokenType.Text;
+                t.Contents = m.Value.Substring(1, m.Value.Length - 2);
             }
             else
             {
@@ -97,18 +109,19 @@ namespace Conflight
             }
         }
 
-        private static Token ReadText(string input, ref int i)
+        private static void ReadText(string input, ref int i, ref Token t)
         {
             Match m = Regex.Match(input.Substring(i), @"^-?(\w|\.| )+");
 
             if (m.Success && m.Index == 0)
             {
                 i += m.Length;
-                return new Token { Contents = m.Value, Type = TokenType.Text };
+                t.Contents = m.Value; 
+                t.Type = TokenType.Text;
             }
             else
             {
-                throw new Exception("ReadText called on bogus index " + i);
+                throw new Exception();
             }
         }
     }

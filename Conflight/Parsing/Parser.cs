@@ -39,7 +39,7 @@ namespace Conflight
             }
             else
             {
-                throw new Exception("Token '" + tokens[i].Contents + "' unexpected.");
+                throw new ParseException(tokens[i], "Unexpected Token '" + tokens[i].Contents + "'.");
             }
         }
 
@@ -47,7 +47,7 @@ namespace Conflight
         {
             if (tokens[i].Type != TokenType.Text)
             {
-                throw new Exception("Expected text node but got " + tokens[i].Contents);
+                throw new ParseException(tokens[i], "Expected text node but got '" + tokens[i].Contents + "'.");
             }
 
             return new TextNode { LiteralContents = tokens[i].Contents, Value = tokens[i++].Contents };
@@ -67,7 +67,7 @@ namespace Conflight
 
                 if (candidate == null)
                 {
-                    throw new Exception("Found an unexpected token in a list while processing! " + tokens[i].Contents);
+                    throw new ParseException(tokens[i], "Found an unexpected token in a list while processing! " + tokens[i].Contents);
                 }
 
                 result.Children.Add(candidate);
@@ -117,12 +117,12 @@ namespace Conflight
 
             if (keyNode == null)
             {
-                throw new Exception("Found an unexpected token in a dict key! " + tokens[i].Contents);
+                throw new ParseException(tokens[i], "Found an unexpected token in a dict key! " + tokens[i].Contents);
             }
 
             if (tokens[i].Type != TokenType.MappingDelimiter)
             {
-                throw new Exception("Mapping delimiter must follow key node.");
+                throw new ParseException(tokens[i], "Mapping delimiter must follow key node.");
             }
 
             ++i;
@@ -130,7 +130,7 @@ namespace Conflight
 
             if (valueNode == null)
             {
-                throw new Exception("Could not parse value node for key " + keyNode.Value + "!");
+                throw new ParseException(tokens[i], "Could not parse value node for key " + keyNode.Value + "!");
             }
 
             return new MappingNode { Key = keyNode as TextNode, Value = valueNode };
