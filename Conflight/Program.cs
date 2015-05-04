@@ -25,6 +25,17 @@ namespace Conflight
             public bool F { get; set; }
         }
 
+        public class F
+        {
+            public float A { get; set; }
+            public float B { get; set; }
+
+            public F(float a, float b)
+            {
+                A = a; B = b;
+            }
+        }
+
         private enum E0 { V1, V2, V3 }
 
         static void Main(string[] args)
@@ -36,7 +47,9 @@ namespace Conflight
             //string test5 = "[{E0L: {V1: 10, V3: -1}, A: 10, B: base dog, E: {F: true}}, {A: 1, C: 10.231}, {F: V3, D: [1, 0, 0, 1]}]";
             //string test6 = "[{\n\tA: 10\n\tB: dog\n}\n{\n\tA: 5\n\tF: V3, C: 1.1}]";
             //string test = "A: 10\nB: dog\nD: [1, 2, 9]\nE: {D: {Test1: 10, TestTwo: 5}}";
-            string test = "{A: 10\nB: dog\nD: [1, 2, 9]\nE: {D: {Test1: 10, TestTwo: 5}}}\n{E: {F: false}\nF:V3}";
+            string test = "{A: 10\nB: dog\nD: [1, 2, 9]\nE: {D: {Test1: 10, TestTwo: 11}}}\n{E: {F: false}\nF:V3}";
+            //string test = "{A: 10, B: 20}";
+
 
 
             /*
@@ -47,7 +60,7 @@ namespace Conflight
             Console.WriteLine(string.Join(", ", tokens.Select(t => t.ToString())));
             */
 
-            var o = ObjectLoader.LoadInstanceList<T>(test);
+            var o = ObjectLoader.LoadInstance<T>(test);
 
             Console.ReadLine();
         }

@@ -32,8 +32,6 @@ namespace Conflight
             {
                 char c = input[charIndex];
 
-
-
                 var t = new Token() { LineNumber = lineNumber, ColumnNumber = charIndex - lineStartCharIndex };
 
                 bool shouldAddToken = true;

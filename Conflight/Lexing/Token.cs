@@ -16,7 +16,7 @@ namespace Conflight
 
         public override string ToString()
         {
-            return string.Format("['{0}' : {1}]", Contents, Type);
+            return string.Format("['{0}' : {1} @ {2},{3}]", Contents, Type, LineNumber, ColumnNumber);
         }
     }
 }
