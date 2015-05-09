@@ -7,6 +7,6 @@ namespace Conflight
 {
     public class ListNode : ParseNode
     {
-        public List<ParseNode> Value = new List<ParseNode>();
+        public List<ParseNode> ListItems = new List<ParseNode>();
     }
 }

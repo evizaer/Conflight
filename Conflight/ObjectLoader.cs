@@ -85,7 +85,7 @@ namespace Conflight
                 throw new InvalidOperationException("Tried to get a list out of conflight content that does not have a list root node.");
             }
 
-            return listNode.Value.Select(v => (T)GetInstance(typeof(T), v as DictNode)).ToList();
+            return listNode.ListItems.Select(v => (T)GetInstance(typeof(T), v as DictNode)).ToList();
         }
 
         private static readonly HashSet<Type> ValueTypes = new HashSet<Type> {typeof(string), typeof(int), typeof(double), typeof(bool)}; 
@@ -166,11 +166,11 @@ namespace Conflight
 
         private static object GetArray(Type valueType, ListNode listNode)
         {
-            var result = Array.CreateInstance(valueType, listNode.Value.Count);
+            var result = Array.CreateInstance(valueType, listNode.ListItems.Count);
 
-            for (int i = 0; i < listNode.Value.Count; i++)
+            for (int i = 0; i < listNode.ListItems.Count; i++)
             {
-                result.SetValue(GetObject(valueType, listNode.Value[i]), i);
+                result.SetValue(GetObject(valueType, listNode.ListItems[i]), i);
             }
 
             return result;
@@ -213,7 +213,7 @@ namespace Conflight
             var listType = typeof(List<>).MakeGenericType(new[] {itemType});
             var result = Activator.CreateInstance(listType);
 
-            foreach (var itemNode in root.Value)
+            foreach (var itemNode in root.ListItems)
             {
                 listType.GetMethod("Add").Invoke(result, new[] { GetObject(itemType, itemNode) });
             }

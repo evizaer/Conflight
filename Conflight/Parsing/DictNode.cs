@@ -51,7 +51,7 @@ namespace Conflight
 
             if (Mappings[key] is ListNode)
             {
-                foreach (ParseNode p in (Mappings[key] as ListNode).Value)
+                foreach (ParseNode p in (Mappings[key] as ListNode).ListItems)
                 {
                     if (p is TextNode)
                     {

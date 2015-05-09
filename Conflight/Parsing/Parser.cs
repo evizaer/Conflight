@@ -77,7 +77,7 @@ namespace Conflight
 
             foreach (ParseNode p in result.Children)
             {
-                result.Value.Add(p);
+                result.ListItems.Add(p);
             }
 
             ++i;
